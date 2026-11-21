@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url = 'https://jitpack.io' }
+    }
+    dependencies { classpath 'com.anatawa12.forge:ForgeGradle:2.3-1.0.+' }
+}
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+
+group = 'com.judamar.tracker'
+version = '1.0.0'
+archivesBaseName = 'ItemTracker'
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava.options.encoding = 'UTF-8'
+
+minecraft {
+    version = '1.12.2'
+    mappings = 'snapshot_20170624'
+    runDir = 'run'
+}
+
+jar { extension = 'litemod' }

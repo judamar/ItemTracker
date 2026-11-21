@@ -1,0 +1,14 @@
+build/
+.gradle/
+run/
+libs/
+.idea/
+*.iml
+out/
+.classpath
+.project
+.settings/
+bin/
+build.number
+logs/
+server-test/

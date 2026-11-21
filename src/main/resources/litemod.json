@@ -1,0 +1,9 @@
+{
+  "name": "ItemTracker",
+  "displayName": "ItemTracker",
+  "version": "1.0.0",
+  "mcversion": "1.12.2",
+  "author": "judamar",
+  "description": "Draws a line from the crosshair to a tracked item.",
+  "revision": 1
+}
