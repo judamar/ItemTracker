@@ -21,7 +21,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -81,11 +83,17 @@ public class LiteModItemTracker implements LiteMod, Tickable, OutboundChatFilter
     @Override public void init(File configPath) { }
     @Override public void upgradeSettings(String v, File c, File o) { }
 
-    private boolean matches(ItemStack s) {
-        if (tracked == null || s == null || s.isEmpty()) return false;
-        if (s.getItem() != tracked.getItem()) return false;
-        if (s.getItem().isDamageable()) return true; // ponytail: ignores damage/NBT for tools, add strict NBT mode if needed
-        return ItemStack.areItemsEqual(s, tracked) && ItemStack.areItemStackTagsEqual(s, tracked);
+    private boolean matches(ItemStack s) { return tracked != null && matches(s, 0); }
+
+    private boolean matches(ItemStack s, int depth) {
+        if (s == null || s.isEmpty()) return false;
+        if (s.getItem() == tracked.getItem() && (s.getItem().isDamageable() // ponytail: ignores damage/NBT for tools, add strict NBT mode if needed
+                || (ItemStack.areItemsEqual(s, tracked) && ItemStack.areItemStackTagsEqual(s, tracked)))) return true;
+        if (depth < 3 && s.getItem() instanceof ItemShulkerBox && s.hasTagCompound() && s.getTagCompound().hasKey("BlockEntityTag", 10)) { // look inside shulker box items
+            NBTTagList items = s.getTagCompound().getCompoundTag("BlockEntityTag").getTagList("Items", 10);
+            for (int i = 0; i < items.tagCount(); i++) if (matches(new ItemStack(items.getCompoundTagAt(i)), depth + 1)) return true;
+        }
+        return false;
     }
 
     @Override
